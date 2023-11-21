@@ -21,7 +21,7 @@ class Launcher
 	const DEFAULT_WINDOWS_EXECUTABLE = "chrome";
 
 	public static $defaultArgs = [
-		"--headless",
+//		"--headless",
 	];
 
 	/** @var string */
