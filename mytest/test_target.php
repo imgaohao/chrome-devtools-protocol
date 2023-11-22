@@ -18,8 +18,8 @@ use ChromeDevtoolsProtocol\Model\Target\CreateTargetRequest;
 use Symfony\Component\Process\Process;
 
 //$path = getenv('PATH');
-//putenv("PATH=D:\\Chrome\\chrome-win64\\chrome-win64");
-putenv("PATH=C:\\Program Files\\Google\\Chrome\\Application");
+putenv("PATH=D:\\Chrome\\chrome-win64\\chrome-win64");
+//putenv("PATH=C:\\Program Files\\Google\\Chrome\\Application");
 
 $ctx = Context::withTimeout(Context::background(), 300 /* seconds */);
 
@@ -34,8 +34,10 @@ try {
 //    $tabs = $instance->tabs($ctx);
 
     // work with new tab
+    $tab = $instance->open($ctx, 'chrome://newtab');
 //    $tab = $instance->open($ctx, 'https://dms.huolala.work');
-    $tab = $instance->open($ctx, 'https://v.douyin.com/iRRSTFrb/');
+//    $tab = $instance->open($ctx, 'https://v.douyin.com/iRRSTFrb/');
+
 //    $tab = $instance->open($ctx, 'https://www.douyin.com/user/MS4wLjABAAAAu7yxghANo4OMIFkbIa6zsCbqoUn3V1jkKSTKIupXwgijogFRr0PFIiiE-fY-5SGn?vid=7303549310661135651');
 //    $tab = $instance->open($ctx, 'https://www.douyin.com/video/7303354348149493003?modeFrom=userLike&secUid=MS4wLjABAAAABjzOKEBgGtGjgevqlbJJuRNcobQVNcznA3B0SiXRPjs');
 //    $tab = $instance->open($ctx, 'https://www.douyin.com/video/7303422993462562084');
@@ -43,6 +45,8 @@ try {
 //    $tab->activate($ctx);
 
     $devtools = $tab->devtools();
+    $target = $devtools->target();
+    $targetResponse = $target->createTarget($ctx, CreateTargetRequest::builder()->setBackground(true)->setUrl('https://dms.huolala.work')->build());
 //    $target = $session->target();
 //    $target->createTarget($ctx, CreateTargetRequest::builder()->setBackground(true)->setUrl('https://dms.huolala.work')->build());
     try {
