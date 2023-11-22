@@ -36,6 +36,7 @@ class ProcessInstance implements InstanceInterface, CloseableResourceInterface
 	public function __destruct()
 	{
 		if ($this->process !== null && $this->process->isRunning()) {
+            $this->process->__destruct();
 //			throw new LogicException(sprintf(
 //				"You must call [%s::%s] method to release underlying process.",
 //				__CLASS__,

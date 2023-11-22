@@ -46,17 +46,6 @@ try {
 //    $target = $devtools->target();
 //    $target->createTarget($ctx, CreateTargetRequest::builder()->setBackground(true)->setUrl('https://dms.huolala.work')->build());
     try {
-//        $devtools->dom()->enable($ctx);
-        $devtools->network()->enable($ctx, EnableRequest::make());
-        $devtools->page()->enable($ctx);
-
-        $devtools->page()->navigate($ctx, NavigateRequest::builder()->setUrl("https://dms.huolala.work/")->build());
-
-//        $queryResult = $devtools->dom()->querySelector($ctx, QuerySelectorRequest::builder()->setSelector('/html/body/div[1]/section/main/div/aside/div/ul/li[1]/ul/li[3]/span/span/span[2]')->setNodeId(0)->build());
-
-//        $devtools->input()->dispatchMouseEvent($ctx, DispatchMouseEventRequest::builder()->setType('mousePressed')->setButton('left')->setX(655)->setY(657)->build());
-
-//        $queryResult->
         $requestId = '';
 
         $devtools->network()->addRequestWillBeSentListener(function (RequestWillBeSentEvent $requestWillBeSentEvent) use ($devtools, $ctx, &$requestId) {
@@ -90,15 +79,26 @@ try {
                 $has = true;
             }
         });
+
+//        $devtools->dom()->enable($ctx);
+        $devtools->network()->enable($ctx, EnableRequest::make());
+//        $devtools->page()->enable($ctx);
+
+//        $devtools->page()->navigate($ctx, NavigateRequest::builder()->setUrl("https://dms.huolala.work/")->build());
+
+//        $queryResult = $devtools->dom()->querySelector($ctx, QuerySelectorRequest::builder()->setSelector('/html/body/div[1]/section/main/div/aside/div/ul/li[1]/ul/li[3]/span/span/span[2]')->setNodeId(0)->build());
+
+//        $devtools->input()->dispatchMouseEvent($ctx, DispatchMouseEventRequest::builder()->setType('mousePressed')->setButton('left')->setX(655)->setY(657)->build());
+
+//        $queryResult->
+
         while (1) {
             $devtools->network()->awaitRequestWillBeSent($ctx);
 //            $devtools->network()->awaitResponseReceived($ctx);
             $devtools->network()->awaitDataReceived($ctx);
-//            if (!$has) {
-//                $devtools->page()->reload($ctx, \ChromeDevtoolsProtocol\Model\Page\ReloadRequest::make());
-//            }
             echo 111 . PHP_EOL;
         }
+
 //        $devtools->page()->captureScreenshot($ctx, CaptureScreenshotRequest::builder()->setFormat("jpg")->setQuality(95)->build());
 //        $devtools->page()->awaitLoadEventFired($ctx);
 
