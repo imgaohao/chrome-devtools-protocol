@@ -31,7 +31,7 @@ $instance = new ProcessInstance(new Process([]), '', 9222);
 $instance->version($ctx);
 
 try {
-//    $tabs = $instance->tabs($ctx);
+    $tabs = $instance->tabs($ctx);
 
     // work with new tab
 //    $tab = $instance->open($ctx, 'https://dms.huolala.work');
@@ -39,18 +39,18 @@ try {
 //    $tab = $instance->open($ctx, 'https://www.douyin.com/user/MS4wLjABAAAAu7yxghANo4OMIFkbIa6zsCbqoUn3V1jkKSTKIupXwgijogFRr0PFIiiE-fY-5SGn?vid=7303549310661135651');
 //    $tab = $instance->open($ctx, 'https://www.douyin.com/video/7303354348149493003?modeFrom=userLike&secUid=MS4wLjABAAAABjzOKEBgGtGjgevqlbJJuRNcobQVNcznA3B0SiXRPjs');
 //    $tab = $instance->open($ctx, 'https://www.douyin.com/video/7303422993462562084');
-//    $session = $instance->createSession($ctx);
+//    $devtools = $instance->createSession($ctx);
 //    $tab->activate($ctx);
 
-    $session = $tab->devtools();
-//    $target = $session->target();
+    $devtools = $tab->devtools();
+//    $target = $devtools->target();
 //    $target->createTarget($ctx, CreateTargetRequest::builder()->setBackground(true)->setUrl('https://dms.huolala.work')->build());
     try {
 //        $devtools->dom()->enable($ctx);
-        $session->network()->enable($ctx, EnableRequest::make());
-        $session->page()->enable($ctx);
+        $devtools->network()->enable($ctx, EnableRequest::make());
+        $devtools->page()->enable($ctx);
 
-//        $devtools->page()->navigate($ctx, NavigateRequest::builder()->setUrl("https://dms.huolala.work/")->build());
+        $devtools->page()->navigate($ctx, NavigateRequest::builder()->setUrl("https://dms.huolala.work/")->build());
 
 //        $queryResult = $devtools->dom()->querySelector($ctx, QuerySelectorRequest::builder()->setSelector('/html/body/div[1]/section/main/div/aside/div/ul/li[1]/ul/li[3]/span/span/span[2]')->setNodeId(0)->build());
 
@@ -59,7 +59,7 @@ try {
 //        $queryResult->
         $requestId = '';
 
-        $session->network()->addRequestWillBeSentListener(function (RequestWillBeSentEvent $requestWillBeSentEvent) use ($session, $ctx, &$requestId) {
+        $devtools->network()->addRequestWillBeSentListener(function (RequestWillBeSentEvent $requestWillBeSentEvent) use ($devtools, $ctx, &$requestId) {
 //            var_dump(func_get_args());
 //            if (strpos($requestWillBeSentEvent->request->url, '/bizgw/account/hs/') !== false) {
 //                echo ($requestWillBeSentEvent->request->headers->get('Token')) . PHP_EOL;
@@ -78,12 +78,12 @@ try {
 //        });
         $has = false;
 
-        $session->network()->addDataReceivedListener(function (DataReceivedEvent $dataReceivedEvent)  use ($session, $ctx, &$requestId, &$has)  {
+        $devtools->network()->addDataReceivedListener(function (DataReceivedEvent $dataReceivedEvent)  use ($devtools, $ctx, &$requestId, &$has)  {
 //            var_dump(func_get_args());
 //            print_r($dataReceivedEvent);
             if ($dataReceivedEvent->requestId == $requestId) {
                 try {
-                    file_put_contents('D:\wamp64\www\chrome-devtools-protocol-master\mytest\data.json', $session->network()->getResponseBody($ctx, GetResponseBodyRequest::builder()->setRequestId($dataReceivedEvent->requestId)->build())->body);
+                    file_put_contents('D:\wamp64\www\chrome-devtools-protocol-master\mytest\data.json', $devtools->network()->getResponseBody($ctx, GetResponseBodyRequest::builder()->setRequestId($dataReceivedEvent->requestId)->build())->body);
                 } catch (Exception $e) {
                 }
                 echo 222 . PHP_EOL;
@@ -91,9 +91,9 @@ try {
             }
         });
         while (1) {
-            $session->network()->awaitRequestWillBeSent($ctx);
+            $devtools->network()->awaitRequestWillBeSent($ctx);
 //            $devtools->network()->awaitResponseReceived($ctx);
-            $session->network()->awaitDataReceived($ctx);
+            $devtools->network()->awaitDataReceived($ctx);
 //            if (!$has) {
 //                $devtools->page()->reload($ctx, \ChromeDevtoolsProtocol\Model\Page\ReloadRequest::make());
 //            }
@@ -111,7 +111,7 @@ try {
         echo $e;
     } finally {
         // devtools client needs to be closed
-        $session->close();
+        $devtools->close();
         file_put_contents('D:\wamp64\www\chrome-devtools-protocol-master\mytest\stop.txt', 'end' . date('Y-m-d H:i:s'), FILE_APPEND);
     }
 
