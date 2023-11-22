@@ -42,13 +42,13 @@ try {
 //    $session = $instance->createSession($ctx);
 //    $tab->activate($ctx);
 
-    $devtools = $tab->devtools();
+    $session = $tab->devtools();
 //    $target = $session->target();
 //    $target->createTarget($ctx, CreateTargetRequest::builder()->setBackground(true)->setUrl('https://dms.huolala.work')->build());
     try {
 //        $devtools->dom()->enable($ctx);
-        $devtools->network()->enable($ctx, EnableRequest::make());
-        $devtools->page()->enable($ctx);
+        $session->network()->enable($ctx, EnableRequest::make());
+        $session->page()->enable($ctx);
 
 //        $devtools->page()->navigate($ctx, NavigateRequest::builder()->setUrl("https://dms.huolala.work/")->build());
 
@@ -59,7 +59,7 @@ try {
 //        $queryResult->
         $requestId = '';
 
-        $devtools->network()->addRequestWillBeSentListener(function (RequestWillBeSentEvent $requestWillBeSentEvent) use ($devtools, $ctx, &$requestId) {
+        $session->network()->addRequestWillBeSentListener(function (RequestWillBeSentEvent $requestWillBeSentEvent) use ($session, $ctx, &$requestId) {
 //            var_dump(func_get_args());
 //            if (strpos($requestWillBeSentEvent->request->url, '/bizgw/account/hs/') !== false) {
 //                echo ($requestWillBeSentEvent->request->headers->get('Token')) . PHP_EOL;
@@ -78,12 +78,12 @@ try {
 //        });
         $has = false;
 
-        $devtools->network()->addDataReceivedListener(function (DataReceivedEvent $dataReceivedEvent)  use ($devtools, $ctx, &$requestId, &$has)  {
+        $session->network()->addDataReceivedListener(function (DataReceivedEvent $dataReceivedEvent)  use ($session, $ctx, &$requestId, &$has)  {
 //            var_dump(func_get_args());
 //            print_r($dataReceivedEvent);
             if ($dataReceivedEvent->requestId == $requestId) {
                 try {
-                    file_put_contents('D:\wamp64\www\chrome-devtools-protocol-master\mytest\data.json', $devtools->network()->getResponseBody($ctx, GetResponseBodyRequest::builder()->setRequestId($dataReceivedEvent->requestId)->build())->body);
+                    file_put_contents('D:\wamp64\www\chrome-devtools-protocol-master\mytest\data.json', $session->network()->getResponseBody($ctx, GetResponseBodyRequest::builder()->setRequestId($dataReceivedEvent->requestId)->build())->body);
                 } catch (Exception $e) {
                 }
                 echo 222 . PHP_EOL;
@@ -91,9 +91,9 @@ try {
             }
         });
         while (1) {
-            $devtools->network()->awaitRequestWillBeSent($ctx);
+            $session->network()->awaitRequestWillBeSent($ctx);
 //            $devtools->network()->awaitResponseReceived($ctx);
-            $devtools->network()->awaitDataReceived($ctx);
+            $session->network()->awaitDataReceived($ctx);
 //            if (!$has) {
 //                $devtools->page()->reload($ctx, \ChromeDevtoolsProtocol\Model\Page\ReloadRequest::make());
 //            }
@@ -107,9 +107,11 @@ try {
         // - print to PDF: $devtools->page()->printToPDF($ctx, PrintToPDFRequest::make());
 //         - capture screenshot: $devtools->page()->captureScreenshot($ctx, CaptureScreenshotRequest::builder()->setFormat("jpg")->setQuality(95)->build());
 
+    } catch (\Exception $e) {
+        echo $e;
     } finally {
         // devtools client needs to be closed
-        $devtools->close();
+        $session->close();
         file_put_contents('D:\wamp64\www\chrome-devtools-protocol-master\mytest\stop.txt', 'end' . date('Y-m-d H:i:s'), FILE_APPEND);
     }
 

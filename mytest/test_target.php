@@ -111,6 +111,8 @@ try {
         // - print to PDF: $devtools->page()->printToPDF($ctx, PrintToPDFRequest::make());
 //         - capture screenshot: $devtools->page()->captureScreenshot($ctx, CaptureScreenshotRequest::builder()->setFormat("jpg")->setQuality(95)->build());
 
+    } catch (\Exception $e) {
+        echo $e;
     } finally {
         // devtools client needs to be closed
         $devtools->close();
