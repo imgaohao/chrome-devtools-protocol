@@ -1,5 +1,5 @@
 <?php
-require 'vendor/autoload.php';
+require '../vendor/autoload.php';
 // context creates deadline for operations
 use ChromeDevtoolsProtocol\Context;
 use ChromeDevtoolsProtocol\Instance\Launcher;
@@ -46,7 +46,7 @@ try {
 //    $target = $session->target();
 //    $target->createTarget($ctx, CreateTargetRequest::builder()->setBackground(true)->setUrl('https://dms.huolala.work')->build());
     try {
-        $devtools->dom()->enable($ctx);
+//        $devtools->dom()->enable($ctx);
         $devtools->network()->enable($ctx, EnableRequest::make());
         $devtools->page()->enable($ctx);
 
@@ -82,7 +82,10 @@ try {
 //            var_dump(func_get_args());
 //            print_r($dataReceivedEvent);
             if ($dataReceivedEvent->requestId == $requestId) {
-                file_put_contents('D:\wamp64\www\chrome-devtools-protocol-master\data.json', $devtools->network()->getResponseBody($ctx, GetResponseBodyRequest::builder()->setRequestId($dataReceivedEvent->requestId)->build())->body);
+                try {
+                    file_put_contents('D:\wamp64\www\chrome-devtools-protocol-master\mytest\data.json', $devtools->network()->getResponseBody($ctx, GetResponseBodyRequest::builder()->setRequestId($dataReceivedEvent->requestId)->build())->body);
+                } catch (Exception $e) {
+                }
                 echo 222 . PHP_EOL;
                 $has = true;
             }
@@ -107,7 +110,7 @@ try {
     } finally {
         // devtools client needs to be closed
         $devtools->close();
-        file_put_contents('D:\wamp64\www\chrome-devtools-protocol-master\stop.txt', 'end' . date('Y-m-d H:i:s'), FILE_APPEND);
+        file_put_contents('D:\wamp64\www\chrome-devtools-protocol-master\mytest\stop.txt', 'end' . date('Y-m-d H:i:s'), FILE_APPEND);
     }
 
 } catch (\Exception $e) {
@@ -116,5 +119,5 @@ try {
 finally {
     // process needs to be killed
     $instance->close();
-    file_put_contents('D:\wamp64\www\chrome-devtools-protocol-master\stop.txt', 'end2' . date('Y-m-d H:i:s'), FILE_APPEND);
+    file_put_contents('D:\wamp64\www\chrome-devtools-protocol-master\mytest\stop.txt', 'end2' . date('Y-m-d H:i:s'), FILE_APPEND);
 }
