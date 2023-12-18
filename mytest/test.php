@@ -26,8 +26,8 @@ $ctx = Context::withTimeout(Context::background(), 300 /* seconds */);
 // launcher starts chrome process ($instance)
 $launcher = new Launcher(9222);
 //$instance = $launcher->launch($ctx, '--remote-allow-origins=*');
-$instance = $launcher->launch($ctx, '--remote-allow-origins=*', "--headless");
-//$instance = new ProcessInstance(new Process([]), '', 9222);
+//$instance = $launcher->launch($ctx, '--remote-allow-origins=*', "--headless");
+$instance = new ProcessInstance(new Process([]), '', 9222);
 //$instance->version($ctx);
 
 try {
